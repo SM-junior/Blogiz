@@ -6,7 +6,10 @@ import BlogDetails from "@/components/ui/BlogDetails";
 //     }
 // }
 export default async function page({params}) {
-    const res=await fetch(`http://localhost:5000/blogs/${params.blogid}`,);
+    const {blogid}=await params;
+    const res=await fetch(`http://localhost:5000/blogs/${blogid}`,{
+        cache:"no-store"
+    });
     const blog= await res.json();
     console.log(blog)
   return (
