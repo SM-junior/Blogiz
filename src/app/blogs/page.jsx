@@ -2,7 +2,7 @@ import BlogCard from "../../components/ui/BlogCard"
 
 export default async function BlogPage() {
     const res = await fetch("http://localhost:5000/blogs", {
-        cache:"no-store"
+        cache:"no-store"  //for SSR
     });
     const blogs = await res.json();
     
