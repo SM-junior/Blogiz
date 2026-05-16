@@ -1,20 +1,26 @@
+'use client'
+
 import BlogCard from "../../components/ui/BlogCard"
+import { useGetBlogsQuery } from "@/redux/api/baseApi"
 
 export default async function BlogPage() {
-    const res = await fetch("http://localhost:5000/blogs", {
-        cache:"no-store"  //for SSR
-    });
-    const blogs = await res.json();
-    
+    // const res = await fetch("http://localhost:5000/blogs", {
+    //     cache:"no-store"  //for SSR
+    // });
+    // const blogs = await res.json();
+
+    const { data: blogs, isLoading, isError, error } = useGetBlogsQuery("");    //now all blogs are comming from redux
+    console.log(blogs)
+
     return (
         <div>
             <h1 className="text-center text-3xl mb-8">Latest Blog From <span className="text-accent">Blogiz</span></h1>
             <div className="grid grid-cols-3 gap-3">
-            
-            {
-                blogs.map((blog)=><BlogCard key={blog.id} blog={blog} />)
-            }
-        </div>
+
+                {
+                    blogs?.map((blog) => <BlogCard key={blog.id} blog={blog} />)
+                }
+            </div>
         </div>
     )
 }

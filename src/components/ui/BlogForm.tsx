@@ -100,6 +100,7 @@ const CreateBlogForm = () => {
       </div>
     </div>
   );
+
 };
 
 export default CreateBlogForm;
