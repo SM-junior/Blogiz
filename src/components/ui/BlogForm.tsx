@@ -1,26 +1,49 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 type FormValues = {
-  id: string;
   title: string;
   description: string;
   publish_date: string;
   author_name: string;
   blog_image: string;
-  total_likes: string;
 };
 
 const CreateBlogForm = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>();
+  const router = useRouter();
+
+  const { register, handleSubmit, reset } = useForm<FormValues>();
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
+    try {
+      const blogData = {
+        ...data,
+        total_likes: 100,
+      };
+
+      const res = await fetch("http://localhost:5000/blogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(blogData),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create blog");
+      }
+
+      const result = await res.json();
+      console.log("Created Blog:", result);
+
+      reset();
+
+      router.push("/blogs"); // go to blog list page
+    } catch (error) {
+      console.log("ERROR:", error);
+    }
   };
 
   return (
@@ -32,75 +55,54 @@ const CreateBlogForm = () => {
       <div className="hero min-h-screen">
         <div className="card w-[50%] shadow-xl bg-base-100">
           <form onSubmit={handleSubmit(onSubmit)} className="card-body">
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Title</span>
-              </label>
-              <input
-                type="text"
-                {...register("title")}
-                placeholder="Title"
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Description</span>
-              </label>
-              <textarea
-                {...register("description")}
-                placeholder="Description"
-                className="textarea textarea-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Publish Date</span>
-              </label>
-              <input
-                {...register("publish_date")}
-                type="date"
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Author Name</span>
-              </label>
-              <input
-                type="text"
-                {...register("author_name")}
-                placeholder="Author Name"
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Blog Image</span>
-              </label>
-              <input
-                type="url"
-                {...register("blog_image")}
-                placeholder="Image URL"
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control mt-6">
-              <button type="submit" className="btn btn-accent btn-outline">
-                Post
-              </button>
-            </div>
+
+            <input
+              type="text"
+              {...register("title")}
+              placeholder="Title"
+              className="input input-bordered"
+              required
+            />
+
+            <textarea
+              {...register("description")}
+              placeholder="Description"
+              className="textarea textarea-bordered"
+              required
+            />
+
+            <input
+              type="date"
+              {...register("publish_date")}
+              className="input input-bordered"
+              required
+            />
+
+            <input
+              type="text"
+              {...register("author_name")}
+              placeholder="Author Name"
+              className="input input-bordered"
+              required
+            />
+
+            <input
+              type="url"
+              {...register("blog_image")}
+              placeholder="Image URL"
+              className="input input-bordered"
+              required
+            />
+
+            <button type="submit" className="btn btn-accent">
+              Post
+            </button>
+
           </form>
         </div>
       </div>
     </div>
   );
-
 };
 
 export default CreateBlogForm;

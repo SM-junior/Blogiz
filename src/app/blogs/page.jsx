@@ -4,13 +4,13 @@ import BlogCard from "../../components/ui/BlogCard"
 import { useGetBlogsQuery } from "@/redux/api/baseApi"
 
 export default async function BlogPage() {
-    // const res = await fetch("http://localhost:5000/blogs", {
-    //     cache:"no-store"  //for SSR
-    // });
-    // const blogs = await res.json();
+    const res = await fetch("http://localhost:5000/blogs", {
+        cache:"no-store"  //for SSR
+    });
+    const blogs = await res.json();
 
-    const { data: blogs, isLoading, isError, error } = useGetBlogsQuery("");    //now all blogs are comming from redux
-    console.log(blogs)
+    // const { data: blogs, isLoading, isError, error } = useGetBlogsQuery("");    //now all blogs are comming from redux
+    // console.log(blogs)
 
     return (
         <div>
